@@ -1,8 +1,23 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 
+import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
+
+/**
+ * Current page number.
+ * @type {number}
+ */
 let page = 1;
+
+/**
+ * Array of book matches based on search filters.
+ * @type {Array}
+ */
 let matches = books;
 
+/**
+ * Creates a preview element for a book.
+ * @param {Object} book - The book object containing author, id, image, and title.
+ * @returns {HTMLElement} The preview element.
+ */
 function createPreviewElement({ author, id, image, title }) {
     const element = document.createElement('button');
     element.classList = 'preview';
@@ -23,6 +38,12 @@ function createPreviewElement({ author, id, image, title }) {
     return element;
 }
 
+/**
+ * Populates the preview items on the page.
+ * @param {number} startIndex - The start index of the items to populate.
+ * @param {number} endIndex - The end index of the items to populate.
+ * @returns {DocumentFragment} The document fragment containing the preview items.
+ */
 function populatePreviewItems(startIndex, endIndex) {
     const fragment = document.createDocumentFragment();
 
@@ -34,6 +55,10 @@ function populatePreviewItems(startIndex, endIndex) {
     return fragment;
 }
 
+/**
+ * Populates the genres select element.
+ * @returns {DocumentFragment} The document fragment containing the genre options.
+ */
 function populateGenres() {
     const genreHtml = document.createDocumentFragment();
     const firstGenreElement = document.createElement('option');
@@ -51,6 +76,10 @@ function populateGenres() {
     return genreHtml;
 }
 
+/**
+ * Populates the authors select element.
+ * @returns {DocumentFragment} The document fragment containing the author options.
+ */
 function populateAuthors() {
     const authorsHtml = document.createDocumentFragment();
     const firstAuthorElement = document.createElement('option');
@@ -68,6 +97,10 @@ function populateAuthors() {
     return authorsHtml;
 }
 
+/**
+ * Sets the theme of the application.
+ * @param {string} theme - The theme to set ('day' or 'night').
+ */
 function setTheme(theme) {
     const isDarkMode = theme === 'night';
     document.querySelector('[data-settings-theme]').value = theme;
@@ -75,18 +108,27 @@ function setTheme(theme) {
     document.documentElement.style.setProperty('--color-light', isDarkMode ? '10, 10, 20' : '255, 255, 255');
 }
 
+/**
+ * Sets the search cancel button event listener.
+ */
 function setSearchCancelButton() {
     document.querySelector('[data-search-cancel]').addEventListener('click', () => {
         document.querySelector('[data-search-overlay]').open = false;
     });
 }
 
+/**
+ * Sets the settings cancel button event listener.
+ */
 function setSettingsCancelButton() {
     document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
         document.querySelector('[data-settings-overlay]').open = false;
     });
 }
 
+/**
+ * Sets the search button event listener.
+ */
 function setSearchButton() {
     document.querySelector('[data-header-search]').addEventListener('click', () => {
         document.querySelector('[data-search-overlay]').open = true;
@@ -94,12 +136,18 @@ function setSearchButton() {
     });
 }
 
+/**
+ * Sets the settings button event listener.
+ */
 function setSettingsButton() {
     document.querySelector('[data-header-settings]').addEventListener('click', () => {
         document.querySelector('[data-settings-overlay]').open = true;
     });
 }
 
+/**
+ * Sets the settings form event listener.
+ */
 function setSettingsForm() {
     document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
         event.preventDefault();
@@ -110,6 +158,9 @@ function setSettingsForm() {
     });
 }
 
+/**
+ * Sets the search form event listener.
+ */
 function setSearchForm() {
     document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
         event.preventDefault();
@@ -156,6 +207,9 @@ function setSearchForm() {
     });
 }
 
+/**
+ * Sets the list button event listener.
+ */
 function setListButton() {
     document.querySelector('[data-list-button]').addEventListener('click', () => {
         const startIndex = page * BOOKS_PER_PAGE;
@@ -166,6 +220,9 @@ function setListButton() {
     });
 }
 
+/**
+ * Updates the remaining count in the list button.
+ */
 function updateListButtonRemaining() {
     const remaining = Math.max(matches.length - (page * BOOKS_PER_PAGE), 0);
     document.querySelector('[data-list-button]').innerHTML = `
@@ -174,6 +231,9 @@ function updateListButtonRemaining() {
     `;
 }
 
+/**
+ * Sets the event listener for list item clicks.
+ */
 function setListItemsClick() {
     document.querySelector('[data-list-items]').addEventListener('click', (event) => {
         const pathArray = Array.from(event.path || event.composedPath());
@@ -205,7 +265,9 @@ function setListItemsClick() {
     });
 }
 
-// Entry point
+/**
+ * Initializes the application.
+ */
 function initializeApp() {
     const startingItems = populatePreviewItems(0, BOOKS_PER_PAGE);
     const genreHtml = populateGenres();
@@ -222,14 +284,13 @@ function initializeApp() {
     }
 
     setListButton();
-    setCancelButton('[data-search-cancel]', '[data-search-overlay]');
-    setCancelButton('[data-settings-cancel]', '[data-settings-overlay]');
-    setHeaderSearch();
-    setHeaderSettings();
+    setSearchCancelButton();
+    setSettingsCancelButton();
+    setSearchButton();
+    setSettingsButton();
     setSettingsForm();
     setSearchForm();
     setListItemsClick();
 }
 
 initializeApp();
-
