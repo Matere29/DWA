@@ -1,0 +1,11 @@
+:not(:defined) {
+    visibility: hidden;
+}
+
+h1 {
+    color: green;
+}
+
+div {
+    margin: 1em;
+}
